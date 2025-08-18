@@ -1,1 +1,97 @@
 
+package hola.mundo;
+import java.util.Scanner;
+public class HolaMundo {
+
+
+    
+    public static void main(String[] args) {
+       holaJava();
+       variablesEjemplo();
+       solicitudDatos();
+       operacionNumerica();
+       usoEscape();
+       divisionEnteros1();
+       divisionEnteros2();
+       pruebaEscritorio();
+       
+       Scanner sc = new Scanner(System.in);
+       sc.close();
+       
+    }
+      //Ejercicio 2 "Hola, Java"
+    public static void holaJava() {
+        System.out.println("¡Hola, Java!");
+     }    
+      //Ejercicio 3 declaracion de variables 
+    public static void variablesEjemplo() {
+       String nombre = "Florencia";
+       int edad = 23;
+       double altura = 1.58;
+       boolean estudiante = true;
+       
+       //Mostrar los valores por consola
+       System.out.println("nombre:" + nombre);
+       System.out.println("edad:" + edad);
+       System.out.println("altura:" + altura);
+       System.out.println("estudiante:" + estudiante);          
+    }
+    //Ejercicio 4 Solicitar al usuario sus datos
+    public static void solicitudDatos() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese su nombre: ");
+        String nombre = sc.nextLine();
+        
+        System.out.print("Ingrese su edad: ");
+        int edad = sc.nextInt();
+        
+        System.out.println("Mi nombre es " + nombre + " y tengo " + edad + "años");
+    }
+    
+    //Ejercicio 5 operacion entre dos numeros
+    public static void operacionNumerica(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese un numero: ");
+        int numero1 = sc.nextInt();
+        
+        System.out.print("Ingrese otro numero:");
+        int numero2 = sc.nextInt();
+        
+        System.out.println("Suma: " + (numero1 + numero2));
+        System.out.println("Resta: " + (numero1 - numero2));
+        System.out.println("Multiplicacion: " + (numero1 * numero2));
+        System.out.println("Division: " + (numero1 / numero2));
+        }
+
+    
+    public static void usoEscape(){
+    System.out.println("Nombre: Juan Perez\nEdad: 30 años\nDireccion: \"Calle Falsa 123\"");
+    }
+    
+    public static void divisionEnteros1(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingresar un numero entero:");
+        int a = sc.nextInt();
+        
+        System.out.print("Ingresar otro numero entero");
+        int b = sc.nextInt();
+        
+        System.out.println("Resultado: " + (a/b));
+         }
+    public static void divisionEnteros2(){
+        Scanner sc = new Scanner(System.in); 
+        System.out.print("Ingresar un numero entero:");
+        double a = sc.nextDouble();
+        
+        System.out.print("Ingresar otro numero entero");
+        double b = sc.nextDouble();
+         
+        System.out.println("Resultado: " + (a/b));
+    }
+    public static void pruebaEscritorio(){
+        int a = 5;
+        int b = 2;
+        int resultado = a/b;
+        System.out.println("Resultado: " + resultado);
+    }
+ }
