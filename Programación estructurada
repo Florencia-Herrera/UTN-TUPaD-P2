@@ -1,0 +1,235 @@
+package tpn2;
+
+import java.util.Scanner;
+
+public class TPn2 {
+
+    static Scanner sc = new Scanner(System.in);
+
+    static double DESCUENTO_ESPECIAL = 0.10;
+
+    public static void main(String[] args) {
+        // Llamo a cada ejercicio (1 al 13)
+        ej1AnioBisiesto();
+        ej2MayorDeTres();
+        ej3ClasificacionEdad();
+        ej4DescuentoPorCategoria();
+        ej5SumaParesWhile();
+        ej6ContarPosNegCeros();
+        ej7ValidacionNotaDoWhile();
+        ej8PrecioFinalImpuestoDescuento();
+        ej9EnvioYTotal();
+        ej10ActualizarStock();
+        ej11DescuentoEspecialGlobal();
+        ej12ArrayPrecios();
+        ej13ImpresionRecursivaArray();
+
+        sc.close();
+    }
+
+    // 1) Año bisiesto
+    public static void ej1AnioBisiesto() {
+        System.out.print("\n[1] Ingrese un año: ");
+        int anio = sc.nextInt();
+        // regla: divisible por 4 y no por 100, salvo que sea por 400
+        boolean bisiesto = (anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0);
+        System.out.println("El año " + anio + (bisiesto ? " es bisiesto." : " no es bisiesto."));
+    }
+
+    // 2) Mayor de tres números
+    public static void ej2MayorDeTres() {
+        System.out.print("\n[2] Ingrese el primer número: "); int a = sc.nextInt();
+        System.out.print("Ingrese el segundo número: ");     int b = sc.nextInt();
+        System.out.print("Ingrese el tercer número: ");      int c = sc.nextInt();
+
+        // supongo que el mayor es a y comparo
+        int mayor = a;
+        if (b > mayor) mayor = b;
+        if (c > mayor) mayor = c;
+
+        System.out.println("El mayor es: " + mayor);
+    }
+
+    // 3) Clasificación de edad
+    public static void ej3ClasificacionEdad() {
+        System.out.print("\n[3] Ingrese su edad: ");
+        int edad = sc.nextInt();
+
+        // según el rango, mostramos categoría
+        if (edad < 12) System.out.println("Eres un Niño.");
+        else if (edad <= 17) System.out.println("Eres un Adolescente.");
+        else if (edad <= 59) System.out.println("Eres un Adulto.");
+        else System.out.println("Eres un Adulto mayor.");
+    }
+
+    // 4) Descuento según categoría A/B/C
+    public static void ej4DescuentoPorCategoria() {
+        System.out.print("\n[4] Ingrese el precio del producto: ");
+        double precio = sc.nextDouble();
+        System.out.print("Ingrese la categoría (A, B o C): ");
+        char cat = sc.next().trim().toUpperCase().charAt(0);
+
+        // elijo porcentaje según la letra
+        double porc;
+        switch (cat) {
+            case 'A': porc = 10; break;
+            case 'B': porc = 15; break;
+            case 'C': porc = 20; break;
+            default:
+                System.out.println("Categoría inválida.");
+                return;
+        }
+        double desc = precio * (porc / 100.0);     // calculo del descuento
+        double finalConDesc = precio - desc;       // precio final
+        System.out.println("Descuento aplicado: " + porc + "%");
+        System.out.println("Precio final: " + finalConDesc);
+    }
+
+    // 5) Sumar solo pares (while), cortar con 0
+    public static void ej5SumaParesWhile() {
+        int suma = 0;
+        int n;
+        System.out.println("\n[5] Suma de pares (0 para terminar)");
+        do {
+            System.out.print("Ingrese un número: ");
+            n = sc.nextInt();
+            if (n % 2 == 0) suma += n; // sumo solo si es par
+        } while (n != 0);              // termina con 0
+        System.out.println("La suma de los pares es: " + suma);
+    }
+
+    // 6) Contar positivos, negativos y ceros (for, 10 números)
+    public static void ej6ContarPosNegCeros() {
+        int pos = 0, neg = 0, ceros = 0;
+        System.out.println("\n[6] Ingrese 10 números:");
+        for (int i = 1; i <= 10; i++) {
+            System.out.print("Número " + i + ": ");
+            int x = sc.nextInt();
+            if (x > 0) pos++;
+            else if (x < 0) neg++;
+            else ceros++;
+        }
+        System.out.println("Positivos: " + pos + " | Negativos: " + neg + " | Ceros: " + ceros);
+    }
+
+    // 7) Validación de nota (0..10) do-while
+    public static void ej7ValidacionNotaDoWhile() {
+        int nota;
+        System.out.println("\n[7] Validación de nota (0 a 10)");
+        do {
+            System.out.print("Ingrese una nota: ");
+            nota = sc.nextInt();
+            if (nota < 0 || nota > 10) {
+                // mensaje de error si está fuera de rango
+                System.out.println("Error: Nota inválida. Ingrese 0..10.");
+            }
+        } while (nota < 0 || nota > 10);
+        System.out.println("Nota guardada correctamente.");
+    }
+
+    // 8) Precio final = base + imp% - desc%  (función con retorno)
+    public static void ej8PrecioFinalImpuestoDescuento() {
+        System.out.print("\n[8] Precio base: ");
+        double base = sc.nextDouble();
+        System.out.print("Impuesto % (ej 10): ");
+        double imp = sc.nextDouble();
+        System.out.print("Descuento % (ej 5): ");
+        double desc = sc.nextDouble();
+
+        double finalPrecio = calcularPrecioFinal(base, imp, desc);
+        System.out.println("El precio final del producto es: " + finalPrecio);
+    }
+    // función que hace la cuenta
+    public static double calcularPrecioFinal(double precioBase, double impuestoPct, double descuentoPct) {
+        double imp = precioBase * (impuestoPct / 100.0);   // parte del impuesto
+        double des = precioBase * (descuentoPct / 100.0);  // parte del descuento
+        return precioBase + imp - des;                     // total
+    }
+
+    // 9) Costo de envío y total (composición de funciones)
+    public static void ej9EnvioYTotal() {
+        System.out.print("\n[9] Precio del producto: ");
+        double precio = sc.nextDouble();
+        System.out.print("Peso del paquete (kg): ");
+        double peso = sc.nextDouble();
+        System.out.print("Zona (Nacional/Internacional): ");
+        String zona = sc.next();
+
+        double costoEnvio = calcularCostoEnvio(peso, zona);          // uso la 1ra función
+        double total = calcularTotalCompra(precio, costoEnvio);      // sumo con la 2da
+        System.out.println("El costo de envío es: " + costoEnvio);
+        System.out.println("El total a pagar es: " + total);
+    }
+    public static double calcularCostoEnvio(double peso, String zona) {
+        // tarifa simple: 5 por kg nacional, 10 por kg internacional
+        double tarifa = zona.equalsIgnoreCase("Nacional") ? 5.0 : 10.0;
+        return tarifa * peso;
+    }
+    public static double calcularTotalCompra(double precioProducto, double costoEnvio) {
+        return precioProducto + costoEnvio;
+    }
+
+    // 10) Actualización de stock (venta y recepción)
+    public static void ej10ActualizarStock() {
+        System.out.print("\n[10] Stock actual: ");
+        int stock = sc.nextInt();
+        System.out.print("Cantidad vendida: ");
+        int vendida = sc.nextInt();
+        System.out.print("Cantidad recibida: ");
+        int recibida = sc.nextInt();
+
+        // fórmula: stockActual - vendida + recibida
+        int nuevo = actualizarStock(stock, vendida, recibida);
+        System.out.println("El nuevo stock del producto es: " + nuevo);
+    }
+    public static int actualizarStock(int stockActual, int cantidadVendida, int cantidadRecibida) {
+        return stockActual - cantidadVendida + cantidadRecibida;
+    }
+
+    // 11) Descuento especial usando variable "global"
+    public static void ej11DescuentoEspecialGlobal() {
+        System.out.print("\n[11] Ingrese el precio del producto: ");
+        double precio = sc.nextDouble();
+        double descuentoAplicado = precio * DESCUENTO_ESPECIAL;  // 10% del precio
+        double finalConDesc = precio - descuentoAplicado;        // precio menos descuento
+        System.out.println("El descuento especial aplicado es: " + descuentoAplicado);
+        System.out.println("El precio final con descuento es: " + finalConDesc);
+    }
+
+    // 12) Array de precios: ver y modificar un valor
+    public static void ej12ArrayPrecios() {
+        // declaro algunos precios
+        double[] precios = {199.99, 299.5, 149.75, 399.0, 89.99};
+
+        System.out.println("\n[12] Precios originales:");
+        for (double p : precios) System.out.println("Precio: $" + p);
+
+        // modifico el 3er precio (índice 2)
+        precios[2] = 129.99;
+
+        System.out.println("Precios modificados:");
+        for (double p : precios) System.out.println("Precio: $" + p);
+    }
+
+    // 13) Impresión recursiva de arrays (antes y después de modificar)
+    public static void ej13ImpresionRecursivaArray() {
+        double[] precios = {199.99, 299.5, 149.75, 399.0, 89.99};
+
+        System.out.println("\n[13] Precios originales:");
+        imprimirRec(precios, 0);   // imprimo con recursión
+
+        // modifico el 3er precio
+        precios[2] = 129.99;
+
+        System.out.println("Precios modificados:");
+        imprimirRec(precios, 0);   // vuelvo a imprimir recursivo
+    }
+    public static void imprimirRec(double[] arr, int i) {
+        // caso base: si llegamos al final, cortamos
+        if (i == arr.length) return;
+        // mostramos el elemento actual
+        System.out.println("Precio: $" + arr[i]);
+        // paso recursivo: avanzao al siguiente índice
+        imprimirRec(arr, i + 1);
+    }
+}
