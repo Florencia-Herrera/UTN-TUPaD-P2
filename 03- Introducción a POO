@@ -1,0 +1,175 @@
+package com.mycompany.tpn3;
+public class TPn3 {
+    public static void main(String[] args) {
+        
+        // 1. Registro de Estudiantes 
+        Estudiante e1 = new Estudiante("Florencia", "Herrera", "Programación", 7);
+        e1.mostrarInfo();
+        e1.subirCalificacion(2); // Suma puntos
+        e1.bajarCalificacion(1); // Resta puntos
+        e1.mostrarInfo();
+
+        //  2. Registro de Mascotas 
+        Mascota m1 = new Mascota("Michonne", "Perro", 3);
+        m1.mostrarInfo();
+        m1.cumplirAnios(); // La mascota cumple años
+        m1.mostrarInfo();
+
+        // 3. Encapsulamiento con Libro 
+        Libro l1 = new Libro("La carretera maldita", "Stephen King", 1981);
+        l1.setAnioPublicacion(1800); // Valor inválido (no cambia)
+        l1.setAnioPublicacion(2000); // Valor válido
+        System.out.println("Libro: " + l1.getTitulo() + ", " + l1.getAutor() + ", " + l1.getAnioPublicacion());
+
+        // 4. Gestión de Gallinas 
+        Gallina g1 = new Gallina(1, 2, 10);
+        Gallina g2 = new Gallina(2, 1, 5);
+        g1.ponerHuevo();
+        g2.envejecer();
+        g1.mostrarEstado();
+        g2.mostrarEstado();
+
+        //  5. Simulación de Nave Espacial 
+        NaveEspacial nave = new NaveEspacial("Apollo", 50);
+        nave.avanzar(10); // No debería avanzar (poco combustible)
+        nave.recargarCombustible(30);
+        nave.avanzar(20); // Ahora sí
+        nave.mostrarEstado();
+    }
+}
+
+
+//CLASES 
+// 1. Clase Estudiante
+class Estudiante {
+    String nombre, apellido, curso;
+    int calificacion;
+
+    public Estudiante(String nombre, String apellido, String curso, int calificacion) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.curso = curso;
+        this.calificacion = calificacion;
+    }
+
+    public void mostrarInfo() {
+        System.out.println(nombre + " " + apellido + " - Curso: " + curso + " - Nota: " + calificacion);
+    }
+
+    public void subirCalificacion(int puntos) {
+        calificacion += puntos;
+    }
+
+    public void bajarCalificacion(int puntos) {
+        calificacion -= puntos;
+    }
+}
+
+// 2. Clase Mascota
+class Mascota {
+    String nombre, especie;
+    int edad;
+
+    public Mascota(String nombre, String especie, int edad) {
+        this.nombre = nombre;
+        this.especie = especie;
+        this.edad = edad;
+    }
+
+    public void mostrarInfo() {
+        System.out.println(nombre + " - " + especie + " - Edad: " + edad);
+    }
+
+    public void cumplirAnios() {
+        edad++;
+    }
+}
+
+// 3. Clase Libro con encapsulamiento
+class Libro {
+    private String titulo, autor;
+    private int anioPublicacion;
+
+    public Libro(String titulo, String autor, int anioPublicacion) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.anioPublicacion = anioPublicacion;
+    }
+
+    public String getTitulo() { return titulo; }
+    public String getAutor() { return autor; }
+    public int getAnioPublicacion() { return anioPublicacion; }
+
+    public void setAnioPublicacion(int anio) {
+        if(anio > 1900 && anio <= 2025) {
+            this.anioPublicacion = anio;
+        } else {
+            System.out.println("Año inválido, no se actualiza.");
+        }
+    }
+}
+
+// 4. Clase Gallina
+class Gallina {
+    int idGallina, edad, huevosPuestos;
+
+    public Gallina(int idGallina, int edad, int huevosPuestos) {
+        this.idGallina = idGallina;
+        this.edad = edad;
+        this.huevosPuestos = huevosPuestos;
+    }
+
+    public void ponerHuevo() {
+        huevosPuestos++;
+    }
+
+    public void envejecer() {
+        edad++;
+    }
+
+    public void mostrarEstado() {
+        System.out.println("Gallina " + idGallina + " - Edad: " + edad + " - Huevos: " + huevosPuestos);
+    }
+}
+
+// 5. Clase NaveEspacial
+class NaveEspacial {
+    String nombre;
+    int combustible;
+
+    public NaveEspacial(String nombre, int combustible) {
+        this.nombre = nombre;
+        this.combustible = combustible;
+    }
+
+    public void despegar() {
+        if(combustible > 10) {
+            combustible -= 10;
+            System.out.println(nombre + " despegó.");
+        } else {
+            System.out.println("No hay suficiente combustible para despegar.");
+        }
+    }
+
+    public void avanzar(int distancia) {
+        if(combustible >= distancia) {
+            combustible -= distancia;
+            System.out.println(nombre + " avanzó " + distancia + " unidades.");
+        } else {
+            System.out.println("No hay suficiente combustible para avanzar.");
+        }
+    }
+
+    public void recargarCombustible(int cantidad) {
+        if(combustible + cantidad <= 100) {
+            combustible += cantidad;
+        } else {
+            combustible = 100;
+        }
+        System.out.println("Combustible actual: " + combustible);
+    }
+
+    public void mostrarEstado() {
+        System.out.println(nombre + " - Combustible: " + combustible);
+    }
+}
