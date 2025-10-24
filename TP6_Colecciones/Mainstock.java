@@ -1,13 +1,63 @@
+package tp6_colecciones;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
-// Enum de categorías con descripción
+/** * TP6 - Colecciones: Inventario con ArrayList y Enum*/
+public class TP6_Colecciones {
+
+    public static void main(String[] args) {
+        // 1) Crear inventario y cargar al menos 5 productos
+        Inventario inventario = new Inventario();
+
+        inventario.agregarProducto(new Producto("P001", "Leche", 950.0, 30, CategoriaProducto.ALIMENTOS));
+        inventario.agregarProducto(new Producto("P002", "Smartphone", 250000.0, 12, CategoriaProducto.ELECTRONICA));
+        inventario.agregarProducto(new Producto("P003", "Remera", 6500.0, 50, CategoriaProducto.ROPA));
+        inventario.agregarProducto(new Producto("P004", "Tostadora", 32000.0, 7, CategoriaProducto.HOGAR));
+        inventario.agregarProducto(new Producto("P005", "Cafe", 1800.0, 20, CategoriaProducto.ALIMENTOS));
+
+        System.out.println("\n--- 2) Listar productos ---");
+        inventario.listarProductos();
+
+        System.out.println("\n--- 3) Buscar por ID (P003) ---");
+        Producto buscado = inventario.buscarProductoPorId("P003");
+        System.out.println(buscado != null ? buscado : "No encontrado");
+
+        System.out.println("\n--- 4) Filtrar por categoria ALIMENTOS ---");
+        List<Producto> alimentos = inventario.filtrarPorCategoria(CategoriaProducto.ALIMENTOS);
+        alimentos.forEach(System.out::println);
+
+        System.out.println("\n--- 5) Eliminar producto P004 y listar ---");
+        inventario.eliminarProducto("P004");
+        inventario.listarProductos();
+
+        System.out.println("\n--- 6) Actualizar stock de P002 a 25 ---");
+        inventario.actualizarStock("P002", 25);
+        inventario.listarProductos();
+
+        System.out.println("\n--- 7) Total de stock disponible ---");
+        System.out.println("Total unidades en stock: " + inventario.obtenerTotalStock());
+
+        System.out.println("\n--- 8) Producto con mayor stock ---");
+        Producto mayor = inventario.obtenerProductoConMayorStock();
+        System.out.println(mayor != null ? mayor : "No hay productos");
+
+        System.out.println("\n--- 9) Filtrar por precio entre 1.000 y 3.000 ---");
+        List<Producto> entre = inventario.filtrarProductosPorPrecio(1000, 3000);
+        entre.forEach(System.out::println);
+
+        System.out.println("\n--- 10) Categorias disponibles ---");
+        inventario.mostrarCategoriasDisponibles();
+    }
+}
+
+/*  ENUM*/
 enum CategoriaProducto {
     ALIMENTOS("Productos comestibles"),
-    ELECTRONICA("Dispositivos electrónicos"),
+    ELECTRONICA("Dispositivos electronicos"),
     ROPA("Prendas de vestir"),
-    HOGAR("Artículos para el hogar");
+    HOGAR("Articulos para el hogar");
 
     private final String descripcion;
 
@@ -20,7 +70,7 @@ enum CategoriaProducto {
     }
 }
 
-// Modelo de producto
+/*MODELO*/
 class Producto {
     private String id;                 // identificador único
     private String nombre;             // nombre del producto
@@ -36,163 +86,115 @@ class Producto {
         this.categoria = categoria;
     }
 
-    // Muestra la info del producto
+    // Getters/setters
+    public String getId() { return id; }
+    public String getNombre() { return nombre; }
+    public double getPrecio() { return precio; }
+    public int getCantidad() { return cantidad; }
+    public CategoriaProducto getCategoria() { return categoria; }
+
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+
     public void mostrarInfo() {
         System.out.println(this);
     }
 
-    // Getters mínimos usados por Inventario
-    public String getId() { return id; }
-    public double getPrecio() { return precio; }
-    public int getCantidad() { return cantidad; }
-    public CategoriaProducto getCategoria() { return categoria; }
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
-
     @Override
     public String toString() {
-        return "Producto{id='" + id + "', nombre='" + nombre + "', precio=" + precio +
-               ", cant=" + cantidad + ", categoria=" + categoria + "}";
+        return "Producto{" +
+               "id='" + id + '\'' +
+               ", nombre='" + nombre + '\'' +
+               ", precio=" + precio +
+               ", cantidad=" + cantidad +
+               ", categoria=" + categoria +
+               " (" + categoria.getDescripcion() + ")}";
     }
 }
 
-// Inventario que maneja la lista dinámica de productos
+/*  INVENTARIO */
 class Inventario {
-    private ArrayList<Producto> productos = new ArrayList<>();
+    private final ArrayList<Producto> productos = new ArrayList<>();
 
-    // Agregar un producto
     public void agregarProducto(Producto p) {
-        productos.add(p);
-    }
-
-    // Listar todos los productos
-    public void listarProductos() {
-        for (Producto p : productos) {
-            p.mostrarInfo();
+        // Evita duplicados por id
+        if (buscarProductoPorId(p.getId()) == null) {
+            productos.add(p);
+        } else {
+            System.out.println("Ya existe un producto con id " + p.getId());
         }
     }
 
-    // Buscar por ID (devuelve null si no está)
+    public void listarProductos() {
+        if (productos.isEmpty()) {
+            System.out.println("(Sin productos)");
+            return;
+        }
+        // Ordenador opcional por nombre para salida prolija
+        productos.stream()
+                 .sorted(Comparator.comparing(Producto::getNombre))
+                 .forEach(System.out::println);
+    }
+
     public Producto buscarProductoPorId(String id) {
         for (Producto p : productos) {
-            if (p.getId().equalsIgnoreCase(id)) {
-                return p;
-            }
+            if (p.getId().equalsIgnoreCase(id)) return p;
         }
         return null;
     }
 
-    // Eliminar por ID (true si lo eliminó)
     public boolean eliminarProducto(String id) {
-        return productos.removeIf(p -> p.getId().equalsIgnoreCase(id));
+        Producto p = buscarProductoPorId(id);
+        if (p != null) {
+            return productos.remove(p);
+        }
+        System.out.println("No se encontro el producto con id " + id);
+        return false;
     }
 
-    // Actualizar stock por ID (true si se pudo)
     public boolean actualizarStock(String id, int nuevaCantidad) {
         Producto p = buscarProductoPorId(id);
         if (p != null) {
             p.setCantidad(nuevaCantidad);
             return true;
         }
+        System.out.println("No se encontro el producto con id " + id);
         return false;
     }
 
-    // Filtrar por categoría
-    public ArrayList<Producto> filtrarPorCategoria(CategoriaProducto categoria) {
+    public List<Producto> filtrarPorCategoria(CategoriaProducto categoria) {
         ArrayList<Producto> out = new ArrayList<>();
         for (Producto p : productos) {
-            if (p.getCategoria() == categoria) {
-                out.add(p);
-            }
+            if (p.getCategoria() == categoria) out.add(p);
         }
         return out;
     }
 
-    // Total de unidades en stock (suma de cantidades)
     public int obtenerTotalStock() {
         int total = 0;
-        for (Producto p : productos) {
-            total += p.getCantidad();
-        }
+        for (Producto p : productos) total += p.getCantidad();
         return total;
     }
 
-    // Producto con mayor stock (null si no hay)
     public Producto obtenerProductoConMayorStock() {
         if (productos.isEmpty()) return null;
-        return productos.stream().max(Comparator.comparingInt(Producto::getCantidad)).orElse(null);
+        Producto max = productos.get(0);
+        for (Producto p : productos) {
+            if (p.getCantidad() > max.getCantidad()) max = p;
+        }
+        return max;
     }
 
-    // Filtra por rango de precio [min, max]
-    public ArrayList<Producto> filtrarProductosPorPrecio(double min, double max) {
+    public List<Producto> filtrarProductosPorPrecio(double min, double max) {
         ArrayList<Producto> out = new ArrayList<>();
         for (Producto p : productos) {
-            if (p.getPrecio() >= min && p.getPrecio() <= max) {
-                out.add(p);
-            }
+            if (p.getPrecio() >= min && p.getPrecio() <= max) out.add(p);
         }
         return out;
     }
 
-    // Muestra todas las categorías con su descripción
     public void mostrarCategoriasDisponibles() {
         for (CategoriaProducto c : CategoriaProducto.values()) {
-            System.out.println(c + " -> " + c.getDescripcion());
+            System.out.println(c.name() + " → " + c.getDescripcion());
         }
-    }
-}
-
-// Clase con pruebas pedidas en el enunciado
-public class MainStock {
-    public static void main(String[] args) {
-        Inventario inv = new Inventario();
-
-        // 1) Crear 5 productos y agregarlos
-        inv.agregarProducto(new Producto("P01","Leche",1200, 50, CategoriaProducto.ALIMENTOS));
-        inv.agregarProducto(new Producto("P02","TV",250000, 5, CategoriaProducto.ELECTRONICA));
-        inv.agregarProducto(new Producto("P03","Remera",8000, 30, CategoriaProducto.ROPA));
-        inv.agregarProducto(new Producto("P04","Silla",15000, 12, CategoriaProducto.HOGAR));
-        inv.agregarProducto(new Producto("P05","Yerba",2500, 100, CategoriaProducto.ALIMENTOS));
-
-        // 2) Listar todos con su info
-        System.out.println("== LISTA COMPLETA ==");
-        inv.listarProductos();
-
-        // 3) Buscar por ID
-        System.out.println("\n== BUSCAR P03 ==");
-        Producto buscado = inv.buscarProductoPorId("P03");
-        System.out.println(buscado != null ? buscado : "No encontrado");
-
-        // 4) Filtrar por categoría
-        System.out.println("\n== ALIMENTOS ==");
-        for (Producto p : inv.filtrarPorCategoria(CategoriaProducto.ALIMENTOS)) {
-            System.out.println(p);
-        }
-
-        // 5) Eliminar por ID y listar de nuevo
-        System.out.println("\n== ELIMINAR P02 ==");
-        System.out.println(inv.eliminarProducto("P02") ? "Eliminado" : "No estaba");
-        inv.listarProductos();
-
-        // 6) Actualizar stock de un producto existente
-        System.out.println("\n== ACTUALIZA STOCK P05 ==");
-        inv.actualizarStock("P05", 80);
-        System.out.println(inv.buscarProductoPorId("P05"));
-
-        // 7) Mostrar total de stock
-        System.out.println("\nTotal stock = " + inv.obtenerTotalStock());
-
-        // 8) Producto con mayor stock
-        System.out.println("\nMayor stock = " + inv.obtenerProductoConMayorStock());
-
-        // 9) Filtrar por precio entre 1000 y 3000
-        System.out.println("\n== Precio entre 1000 y 3000 ==");
-        ArrayList<Producto> rango = inv.filtrarProductosPorPrecio(1000, 3000);
-        for (Producto p : rango) {
-            System.out.println(p);
-        }
-
-        // 10) Categorías disponibles con descripción
-        System.out.println("\n== CATEGORÍAS DISPONIBLES ==");
-        inv.mostrarCategoriasDisponibles();
     }
 }
