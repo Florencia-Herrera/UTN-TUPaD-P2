@@ -1,9 +1,8 @@
-// Demuestra relación de composición 1 a N entre Biblioteca y Libro.
 
 import java.util.ArrayList;
 import java.util.List;
 
-// ---------- Clase Autor ----------
+//  Clase Autor 
 class Autor {
     private String id;
     private String nombre;
@@ -29,7 +28,7 @@ class Autor {
     }
 }
 
-// ---------- Clase Libro ----------
+//  Clase Libro 
 class Libro {
     private String isbn;
     private String titulo;
@@ -66,7 +65,7 @@ class Libro {
     }
 }
 
-// ---------- Clase Biblioteca ----------
+//  Clase Biblioteca
 class Biblioteca {
     private String nombre;
     private List<Libro> libros = new ArrayList<>();
@@ -128,7 +127,7 @@ class Biblioteca {
     }
 }
 
-// ---------- Clase principal (Main) ----------
+// Clase principal (Main) 
 public class MainBiblioteca {
     public static void main(String[] args) {
         // 1) Crear biblioteca
