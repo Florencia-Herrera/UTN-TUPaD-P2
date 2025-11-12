@@ -1,9 +1,7 @@
-// Relación bidireccional 1 a N: un Profesor dicta muchos Cursos, y cada Curso tiene un Profesor.
-
 import java.util.ArrayList;
 import java.util.List;
 
-// ---------- Clase Profesor ----------
+// Clase Profesor 
 class Profesor {
     private String id;
     private String nombre;
@@ -64,7 +62,7 @@ class Profesor {
     }
 }
 
-// ---------- Clase Curso ----------
+//  Clase Curso 
 class Curso {
     private String codigo;
     private String nombre;
@@ -101,7 +99,7 @@ class Curso {
     }
 }
 
-// ---------- Clase Universidad ----------
+//  Clase Universidad 
 class Universidad {
     private String nombre;
     private List<Profesor> profesores;
@@ -188,7 +186,7 @@ class Universidad {
     }
 }
 
-// ---------- Clase principal ----------
+// Clase principal 
 public class MainUniversidad {
     public static void main(String[] args) {
         Universidad uni = new Universidad("UTN Virtual");
