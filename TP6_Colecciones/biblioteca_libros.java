@@ -1,8 +1,7 @@
-
+package tp5_bibliotecaylibros;
 import java.util.ArrayList;
 import java.util.List;
 
-//  Clase Autor 
 class Autor {
     private String id;
     private String nombre;
@@ -14,26 +13,25 @@ class Autor {
         this.nacionalidad = nacionalidad;
     }
 
-    public void mostrarInfo() {
-        System.out.println(this);
-    }
+    public String getId() { return id; }
+    public String getNombre() { return nombre; }
+    public String getNacionalidad() { return nacionalidad; }
 
-    public String getNombre() {
-        return nombre;
+    public void mostrarInfo() {
+        System.out.println("Autor: " + nombre + " (" + nacionalidad + ") - ID: " + id);
     }
 
     @Override
     public String toString() {
-        return "Autor{id='" + id + "', nombre='" + nombre + "', nacionalidad='" + nacionalidad + "'}";
+        return nombre + " (" + nacionalidad + ")";
     }
 }
 
-//  Clase Libro 
 class Libro {
     private String isbn;
     private String titulo;
     private int anioPublicacion;
-    private Autor autor; // Asociación con Autor
+    private Autor autor;
 
     public Libro(String isbn, String titulo, int anioPublicacion, Autor autor) {
         this.isbn = isbn;
@@ -42,30 +40,18 @@ class Libro {
         this.autor = autor;
     }
 
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public int getAnioPublicacion() {
-        return anioPublicacion;
-    }
-
-    public Autor getAutor() {
-        return autor;
-    }
+    public String getIsbn() { return isbn; }
+    public int getAnioPublicacion() { return anioPublicacion; }
+    public Autor getAutor() { return autor; }
 
     public void mostrarInfo() {
-        System.out.println(this);
-    }
-
-    @Override
-    public String toString() {
-        return "Libro{ISBN='" + isbn + "', título='" + titulo + "', año=" + anioPublicacion +
-               ", autor=" + (autor != null ? autor.getNombre() : "Desconocido") + "}";
+        System.out.println("Libro: " + titulo +
+                " | ISBN: " + isbn +
+                " | Año: " + anioPublicacion +
+                " | Autor: " + autor);
     }
 }
 
-//  Clase Biblioteca
 class Biblioteca {
     private String nombre;
     private List<Libro> libros = new ArrayList<>();
@@ -74,100 +60,99 @@ class Biblioteca {
         this.nombre = nombre;
     }
 
-    // Composición: la biblioteca crea y contiene sus libros
     public void agregarLibro(String isbn, String titulo, int anioPublicacion, Autor autor) {
         libros.add(new Libro(isbn, titulo, anioPublicacion, autor));
     }
 
     public void listarLibros() {
-        System.out.println("\n--- Libros en la biblioteca \"" + nombre + "\" ---");
-        if (libros.isEmpty()) {
-            System.out.println("No hay libros cargados.");
-        } else {
-            for (Libro l : libros) {
-                l.mostrarInfo();
-            }
+        System.out.println(" LIBROS EN " + nombre + " ");
+        for (Libro l : libros) {
+            l.mostrarInfo();
         }
+        System.out.println();
     }
 
     public Libro buscarLibroPorIsbn(String isbn) {
         for (Libro l : libros) {
-            if (l.getIsbn().equalsIgnoreCase(isbn)) {
-                return l;
-            }
+            if (l.getIsbn().equals(isbn)) return l;
         }
         return null;
     }
 
-    public boolean eliminarLibro(String isbn) {
-        return libros.removeIf(l -> l.getIsbn().equalsIgnoreCase(isbn));
+    public void eliminarLibro(String isbn) {
+        libros.removeIf(l -> l.getIsbn().equals(isbn));
     }
 
     public int obtenerCantidadLibros() {
         return libros.size();
     }
 
-    public List<Libro> filtrarLibrosPorAnio(int anio) {
-        List<Libro> filtrados = new ArrayList<>();
+    public void filtrarLibrosPorAnio(int anio) {
+        System.out.println("LIBROS DEL AÑO " + anio + " ");
         for (Libro l : libros) {
             if (l.getAnioPublicacion() == anio) {
-                filtrados.add(l);
+                l.mostrarInfo();
             }
         }
-        return filtrados;
+        System.out.println();
     }
 
     public void mostrarAutoresDisponibles() {
-        System.out.println("\n--- Autores disponibles en \"" + nombre + "\" ---");
+        System.out.println(" AUTORES DISPONIBLES ");
+        ArrayList<String> nombres = new ArrayList<>();
         for (Libro l : libros) {
-            if (l.getAutor() != null) {
-                System.out.println(l.getAutor());
+            String autorStr = l.getAutor().toString();
+            if (!nombres.contains(autorStr)) {
+                nombres.add(autorStr);
+                System.out.println(autorStr);
             }
         }
+        System.out.println();
     }
 }
 
-// Clase principal (Main) 
-public class MainBiblioteca {
+public class TP5_BibliotecayLibros {
     public static void main(String[] args) {
-        // 1) Crear biblioteca
+
+        // 1) Creamos biblioteca
         Biblioteca biblioteca = new Biblioteca("Biblioteca Central");
 
-        // 2) Crear autores
-        Autor a1 = new Autor("A01", "Jorge Luis Borges", "Argentina");
-        Autor a2 = new Autor("A02", "Julio Cortázar", "Argentina");
-        Autor a3 = new Autor("A03", "Isabel Allende", "Chile");
+        // 2) Creamos autores
+        Autor a1 = new Autor("A001", "Julio Cortazar", "Argentina");
+        Autor a2 = new Autor("A002", "Isabel Allende", "Chile");
+        Autor a3 = new Autor("A003", "Gabriel Garcia Marquez", "Colombia");
 
-        // 3) Agregar libros (composición)
-        biblioteca.agregarLibro("ISBN01", "Ficciones", 1944, a1);
-        biblioteca.agregarLibro("ISBN02", "Rayuela", 1963, a2);
-        biblioteca.agregarLibro("ISBN03", "La casa de los espíritus", 1982, a3);
-        biblioteca.agregarLibro("ISBN04", "El Aleph", 1949, a1);
-        biblioteca.agregarLibro("ISBN05", "Bestiario", 1951, a2);
+        // 3) Agregamos 5 libros
+        biblioteca.agregarLibro("ISBN001", "Rayuela", 1963, a1);
+        biblioteca.agregarLibro("ISBN002", "Bestiario", 1951, a1);
+        biblioteca.agregarLibro("ISBN003", "La casa de los espiritus", 1982, a2);
+        biblioteca.agregarLibro("ISBN004", "Cien años de soledad", 1967, a3);
+        biblioteca.agregarLibro("ISBN005", "El amor en los tiempos del colera", 1985, a3);
 
-        // 4) Listar todos los libros
+        // 4) Listar libros
         biblioteca.listarLibros();
 
-        // 5) Buscar libro por ISBN
-        System.out.println("\n== Buscar libro ISBN03 ==");
-        Libro encontrado = biblioteca.buscarLibroPorIsbn("ISBN03");
-        System.out.println(encontrado != null ? encontrado : "No encontrado.");
+        // 5) Buscar por ISBN
+        System.out.println("BUSCAR ISBN003 ");
+        Libro buscado = biblioteca.buscarLibroPorIsbn("ISBN003");
+        if (buscado != null) buscado.mostrarInfo();
+        System.out.println();
 
-        // 6) Filtrar libros por año
-        System.out.println("\n== Libros publicados en 1949 ==");
-        for (Libro l : biblioteca.filtrarLibrosPorAnio(1949)) {
-            System.out.println(l);
-        }
+        // 6) Filtrar por año
+        biblioteca.filtrarLibrosPorAnio(1967);
 
-        // 7) Eliminar un libro por ISBN
-        System.out.println("\n== Eliminar libro ISBN02 ==");
-        System.out.println(biblioteca.eliminarLibro("ISBN02") ? "Eliminado correctamente." : "No se encontró el libro.");
+        // 7) Eliminar libro por ISBN
+        biblioteca.eliminarLibro("ISBN002");
+        System.out.println(" LISTA LUEGO DE ELIMINAR ISBN002 ");
         biblioteca.listarLibros();
 
-        // 8) Mostrar cantidad total de libros
-        System.out.println("\nCantidad total de libros: " + biblioteca.obtenerCantidadLibros());
+        // 8) Cantidad total de libros
+        System.out.println("Cantidad total de libros: " + biblioteca.obtenerCantidadLibros());
+        System.out.println();
 
-        // 9) Mostrar autores disponibles
+        // 9) Listar autores
         biblioteca.mostrarAutoresDisponibles();
     }
 }
+
+   
