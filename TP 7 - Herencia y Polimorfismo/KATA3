@@ -1,1 +1,79 @@
+// package tp7_kata3;
+
+import java.util.ArrayList;
+import java.util.List;
+
+abstract class Empleado {
+    private String nombre;
+
+    public Empleado(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public abstract double calcularSueldo();
+}
+
+class EmpleadoPlanta extends Empleado {
+    private double sueldoBasico;
+    private int antiguedad; // años
+
+    public EmpleadoPlanta(String nombre, double sueldoBasico, int antiguedad) {
+        super(nombre);
+        this.sueldoBasico = sueldoBasico;
+        this.antiguedad = antiguedad;
+    }
+
+    @Override
+    public double calcularSueldo() {
+        return sueldoBasico + antiguedad * 5000; // plus por antigüedad
+    }
+}
+
+class EmpleadoTemporal extends Empleado {
+    private int horasTrabajadas;
+    private double valorHora;
+
+    public EmpleadoTemporal(String nombre, int horasTrabajadas, double valorHora) {
+        super(nombre);
+        this.horasTrabajadas = horasTrabajadas;
+        this.valorHora = valorHora;
+    }
+
+    @Override
+    public double calcularSueldo() {
+        return horasTrabajadas * valorHora;
+    }
+}
+
+public class Kata3_Empleados {
+    public static void main(String[] args) {
+
+        List<Empleado> empleados = new ArrayList<>();
+        empleados.add(new EmpleadoPlanta("Ana", 200000, 3));
+        empleados.add(new EmpleadoTemporal("Luis", 160, 1500));
+        empleados.add(new EmpleadoPlanta("María", 220000, 5));
+        empleados.add(new EmpleadoTemporal("Juan", 80, 1800));
+
+        System.out.println("Listado de sueldos:");
+
+        for (Empleado e : empleados) {
+            String tipo;
+            if (e instanceof EmpleadoPlanta) {
+                tipo = "Planta";
+            } else if (e instanceof EmpleadoTemporal) {
+                tipo = "Temporal";
+            } else {
+                tipo = "Desconocido";
+            }
+
+            System.out.println(
+                e.getNombre() + " (" + tipo + ") - Sueldo: " + e.calcularSueldo()
+            );
+        }
+    }
+}
 
