@@ -1,4 +1,4 @@
-// package tp7_kata1;
+package kata1;
 
 class Vehiculo {
     protected String marca;
@@ -30,7 +30,7 @@ class Auto extends Vehiculo {
     }
 }
 
-public class Kata1_Vehiculos {
+public class Kata1 {
     public static void main(String[] args) {
         Auto auto = new Auto("Toyota", "Corolla", 4);
         auto.mostrarInfo();
