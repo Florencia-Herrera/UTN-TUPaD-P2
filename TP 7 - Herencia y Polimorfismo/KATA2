@@ -1,4 +1,4 @@
-// package tp7_kata2;
+package kata2;
 
 abstract class FiguraGeometrica {
     private String nombre;
@@ -44,7 +44,7 @@ class Rectangulo extends FiguraGeometrica {
     }
 }
 
-public class Kata2_Figuras {
+public class Kata2 {
     public static void main(String[] args) {
 
         FiguraGeometrica[] figuras = {
