@@ -1,4 +1,4 @@
-// package tp7_kata4;
+package kata4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ class Vaca extends Animal {
     }
 }
 
-public class Kata4_Animales {
+public class Kata4 {
     public static void main(String[] args) {
 
         List<Animal> animales = new ArrayList<>();
