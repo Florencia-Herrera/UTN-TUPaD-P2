@@ -1,0 +1,284 @@
+package tp8_interfacesyexcepciones;   
+
+import java.util.ArrayList;
+import java.io.*;
+
+// PARTE 1: INTERFACES Y E-COMMERCE
+
+// Interface para cosas que se pueden pagar
+interface Pagable {
+    double calcularTotal();
+}
+
+// Interface para medios de pago
+interface Pago {
+    void procesarPago(double monto);
+}
+
+// Interface para pagos con descuento
+interface PagoConDescuento {
+    double aplicarDescuento(double monto);
+}
+
+// Interface para cosas que reciben notificaciones
+interface Notificable {
+    void notificar(String mensaje);
+}
+
+// Cliente que recibe notificaciones
+class Cliente implements Notificable {
+
+    private String nombre;
+
+    public Cliente(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    @Override
+    public void notificar(String mensaje) {
+        System.out.println("Notificacion para " + nombre + ": " + mensaje);
+    }
+}
+
+// Producto que se puede pagar
+class Producto implements Pagable {
+
+    private String nombre;
+    private double precio;
+
+    public Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+
+    @Override
+    public double calcularTotal() {
+        return precio;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " - $" + precio;
+    }
+}
+
+// Pedido que agrupa productos y avisa al cliente
+class Pedido implements Pagable {
+
+    private ArrayList<Producto> productos;
+    private Cliente cliente;
+    private String estado;
+
+    public Pedido(Cliente cliente) {
+        this.cliente = cliente;
+        this.productos = new ArrayList<>();
+        this.estado = "CREADO";
+    }
+
+    public void agregarProducto(Producto p) {
+        productos.add(p);
+    }
+
+    public void cambiarEstado(String nuevoEstado) {
+        this.estado = nuevoEstado;
+        cliente.notificar("El pedido cambio de estado a: " + nuevoEstado);
+    }
+
+    @Override
+    public double calcularTotal() {
+        double total = 0;
+        for (Producto p : productos) {
+            total += p.calcularTotal();
+        }
+        return total;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido de " + cliente.getNombre() + "  Estado: " + estado +
+               " Total: $" + calcularTotal();
+    }
+}
+
+// Pago con tarjeta de crédito (con descuento)
+class TarjetaCredito implements Pago, PagoConDescuento {
+
+    @Override
+    public void procesarPago(double monto) {
+        System.out.println("Pagando $" + monto + " con Tarjeta de Credito.");
+    }
+
+    @Override
+    public double aplicarDescuento(double monto) {
+        // 10% de descuento
+        return monto * 0.90;
+    }
+}
+
+// Pago con PayPal (sin descuento)
+class PayPal implements Pago {
+
+    @Override
+    public void procesarPago(double monto) {
+        System.out.println("Pagando $" + monto + " con PayPal.");
+    }
+}
+
+// PARTE 2: EJERCICIOS DE EXCEPCIONES
+
+// 1) División segura
+class DivisionSegura {
+    public static void dividir(int a, int b) {
+        System.out.println("Intentando dividir " + a + " / " + b);
+        try {
+            int resultado = a / b;
+            System.out.println("Resultado: " + resultado);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: no se puede dividir por cero.");
+        }
+        System.out.println();
+    }
+}
+
+// 2) Conversión de String a int
+class ConversionNumero {
+    public static void convertir(String texto) {
+        System.out.println("Intentando convertir: \"" + texto + "\" a numero");
+        try {
+            int n = Integer.parseInt(texto);
+            System.out.println("Numero convertido correctamente: " + n);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: el texto no es un numero valido.");
+        }
+        System.out.println();
+    }
+}
+
+// 3) Lectura de archivo con FileNotFoundException
+class LeerArchivoSeguro {
+    public static void leerArchivo(String ruta) {
+        System.out.println("Leyendo archivo (modo clasico): " + ruta);
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(ruta));
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo no encontrado: " + ruta);
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo.");
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                System.out.println("Error al cerrar el archivo.");
+            }
+        }
+        System.out.println();
+    }
+}
+
+// 4) Excepción personalizada EdadInvalidaException
+class EdadInvalidaException extends Exception {
+    public EdadInvalidaException(String mensaje) {
+        super(mensaje);
+    }
+}
+
+class ValidadorEdad {
+    public static void validarEdad(int edad) throws EdadInvalidaException {
+        System.out.println("Validando edad: " + edad);
+        if (edad < 0 || edad > 120) {
+            throw new EdadInvalidaException("Edad invalida: " + edad);
+        }
+        System.out.println("Edad valida.\n");
+    }
+}
+
+// 5) try-with-resources con BufferedReader
+class TryWithResourcesEjemplo {
+    public static void leer(String ruta) {
+        System.out.println("Leyendo archivo (try-with-resources): " + ruta);
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo no encontrado: " + ruta);
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo.");
+        }
+        System.out.println();
+    }
+}
+
+// CLASE PRINCIPAL
+
+public class TP8_InterfacesYExcepciones {
+
+    public static void main(String[] args) {
+
+        // PARTE 1: DEMO E-COMMERCE
+        System.out.println("PARTE 1: E-COMMERCE CON INTERFACES \n");
+
+        Cliente cliente = new Cliente("Florencia");
+        Pedido pedido = new Pedido(cliente);
+
+        pedido.agregarProducto(new Producto("Labial", 3500));
+        pedido.agregarProducto(new Producto("Base", 7800));
+        pedido.agregarProducto(new Producto("Sombras", 4200));
+
+        System.out.println(pedido);
+
+        // Cambiamos estado del pedido
+        pedido.cambiarEstado("PAGADO");
+
+        double total = pedido.calcularTotal();
+        System.out.println("Total sin descuento: $" + total);
+
+        // Pago con tarjeta con descuento
+        TarjetaCredito tarjeta = new TarjetaCredito();
+        double totalConDescuento = tarjeta.aplicarDescuento(total);
+        System.out.println("Total con descuento (Tarjeta Credito): $" + totalConDescuento);
+        tarjeta.procesarPago(totalConDescuento);
+
+        // Pago con PayPal (sin descuento)
+        PayPal paypal = new PayPal();
+        paypal.procesarPago(total);
+
+        System.out.println("\n\n PARTE 2: EXCEPCIONES EN JAVA \n");
+
+        // 1) División segura
+        DivisionSegura.dividir(10, 2);
+        DivisionSegura.dividir(10, 0);
+
+        // 2) Conversión String -> int
+        ConversionNumero.convertir("123");
+        ConversionNumero.convertir("abc");
+
+        // 3) Lectura de archivo normal
+        LeerArchivoSeguro.leerArchivo("archivo.txt");
+
+        // 4) Excepción personalizada EdadInvalidaException
+        try {
+            ValidadorEdad.validarEdad(25);
+            ValidadorEdad.validarEdad(-3);
+        } catch (EdadInvalidaException e) {
+            System.out.println("Se capturo EdadInvalidaException: " + e.getMessage() + "\n");
+        }
+
+        // 5) try-with-resources
+        TryWithResourcesEjemplo.leer("archivo.txt");
+
+        System.out.println("FIN DEL TP.");
+    }
+}
